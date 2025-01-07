@@ -1,10 +1,9 @@
-import { DatePicker } from "antd";
+import MainLayout from "./components/layout/MainLayout";
 
 function App() {
   return (
     <>
-      <h1>Hello World!</h1>
-      <DatePicker />;
+      <MainLayout></MainLayout>
     </>
   );
 }
