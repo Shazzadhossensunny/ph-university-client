@@ -1,8 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ReactNode } from "react";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import CreateAdmin from "../pages/admin/CreateAdmin";
 import CreateFaculty from "../pages/admin/CreateFaculty";
 import CreateStudent from "../pages/admin/CreateStudent";
+import { NavLink } from "react-router";
+
+type TRoute = {
+  path: string;
+  element: ReactNode;
+};
+
+type TSidebarItems = {
+  key: string;
+  label: ReactNode;
+  children?: TSidebarItems[];
+};
 
 export const adminPath = [
   {
@@ -28,49 +40,56 @@ export const adminPath = [
         path: "create-student",
         element: <CreateStudent />,
       },
+      {
+        name: "Create Member",
+        path: "create-member",
+        element: <CreateStudent />,
+      },
     ],
   },
 ];
 
-// Initialize arrays for routes and menu items
-export const adminRoutes: { path: string; element: React.ReactNode }[] = [];
-export const menuItems: {
-  key: string;
-  label: React.ReactNode;
-  children?: any[];
-}[] = [];
+//* Generate dynamic Routes
+export const adminRoutes: TRoute[] = [];
 
-// Directly process adminPath2
-adminPath.forEach(({ name, path, element, children }) => {
+// Directly process adminPath
+adminPath.forEach(({ path, element, children }) => {
   if (path && element) {
     // Add to routes
     adminRoutes.push({ path, element });
+  }
 
-    // Add to menu
-    menuItems.push({
+  if (children) {
+    children.forEach(({ path: childPath, element: childElement }) => {
+      if (childPath && childElement) {
+        adminRoutes.push({ path: childPath, element: childElement });
+      }
+    });
+  }
+});
+
+//* Generate dynamic Menu Items
+export const adminSideBarItems: TSidebarItems[] = [];
+adminPath.forEach(({ name, path, children }) => {
+  if (path) {
+    adminSideBarItems.push({
       key: path,
-      label: name,
+      label: <NavLink to={`/admin/${path}`}>{name}</NavLink>,
     });
   }
 
   if (children) {
-    // Process children directly
-    const childMenuItems: { key: string; label: string }[] = [];
-    children.forEach((child) => {
-      if (child.path && child.element) {
-        // Add child routes
-        adminRoutes.push({ path: child.path, element: child.element });
-
-        // Add child menu items
+    const childMenuItems: TSidebarItems[] = [];
+    children.forEach(({ name: childName, path: childPath }) => {
+      if (childPath) {
         childMenuItems.push({
-          key: child.path,
-          label: child.name,
+          key: childPath,
+          label: <NavLink to={`/admin/${childPath}`}>{childName}</NavLink>,
         });
       }
     });
 
-    // Add parent menu item with children
-    menuItems.push({
+    adminSideBarItems.push({
       key: name,
       label: name,
       children: childMenuItems,
@@ -78,6 +97,7 @@ adminPath.forEach(({ name, path, element, children }) => {
   }
 });
 
+//! hardcode routes
 // export const adminPath = [
 //   {
 //     path: "dashboard",

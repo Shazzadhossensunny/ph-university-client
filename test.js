@@ -28,17 +28,27 @@ const adminPath2 = [
 
 // const processAdminPath = (paths) => {};
 
-// Initialize arrays for routes and menu items
+// 1. Generate Routes
 export const adminRoutes = [];
-const menuItems = [];
 
-// Directly process adminPath2
-adminPath2.forEach(({ name, path, element, children }) => {
+adminPath2.forEach(({ path, element, children }) => {
   if (path && element) {
     // Add to routes
     adminRoutes.push({ path, element });
+  }
 
-    // Add to menu
+  if (children) {
+    children.forEach(({ path: childPath, element: childElement }) => {
+      if (childPath && childElement) {
+        adminRoutes.push({ path: childPath, element: childElement });
+      }
+    });
+  }
+});
+// 2. Generate Menu Items
+const menuItems = [];
+adminPath2.forEach(({ name, path, children }) => {
+  if (path) {
     menuItems.push({
       key: path,
       label: name,
@@ -46,28 +56,23 @@ adminPath2.forEach(({ name, path, element, children }) => {
   }
 
   if (children) {
-    // Process children directly
     const childMenuItems = [];
-    children.forEach((child) => {
-      if (child.path && child.element) {
-        // Add child routes
-        adminRoutes.push({ path: child.path, element: child.element });
-
-        // Add child menu items
+    children.forEach(({ name: childName, path: childPath }) => {
+      if (childPath) {
         childMenuItems.push({
-          key: child.path,
-          label: child.name,
+          key: childPath,
+          label: childName,
         });
       }
     });
 
-    // Add parent menu item with children
     menuItems.push({
       key: name,
       label: name,
-      children: JSON.stringify(childMenuItems),
+      children: childMenuItems,
     });
   }
 });
+
 console.log(adminRoutes);
 console.log(menuItems);
