@@ -73,6 +73,3 @@ adminPath2.forEach(({ name, path, children }) => {
     });
   }
 });
-
-console.log(adminRoutes);
-console.log(menuItems);

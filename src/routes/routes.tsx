@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import { adminRoutes } from "./admin.routes";
+import { adminPath } from "./admin.routes";
+import { mainRoutesGenerator } from "../utils/routesGenerator";
 
 const router = createBrowserRouter([
   {
@@ -13,17 +14,18 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <App />,
     // children: adminPath,
-    children: adminRoutes,
+    // children: adminRoutes,
+    children: mainRoutesGenerator(adminPath),
   },
   {
     path: "/faculty",
     element: <App />,
-    children: adminRoutes,
+    children: mainRoutesGenerator(adminPath),
   },
   {
     path: "/student",
     element: <App />,
-    children: adminRoutes,
+    children: mainRoutesGenerator(adminPath),
   },
   {
     path: "/login",

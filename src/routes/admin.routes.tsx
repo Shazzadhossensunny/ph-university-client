@@ -5,10 +5,10 @@ import CreateFaculty from "../pages/admin/CreateFaculty";
 import CreateStudent from "../pages/admin/CreateStudent";
 import { NavLink } from "react-router";
 
-type TRoute = {
-  path: string;
-  element: ReactNode;
-};
+// type TRoute = {
+//   path: string;
+//   element: ReactNode;
+// };
 
 type TSidebarItems = {
   key: string;
@@ -40,33 +40,28 @@ export const adminPath = [
         path: "create-student",
         element: <CreateStudent />,
       },
-      {
-        name: "Create Member",
-        path: "create-member",
-        element: <CreateStudent />,
-      },
     ],
   },
 ];
 
 //* Generate dynamic Routes
-export const adminRoutes: TRoute[] = [];
+// export const adminRoutes: TRoute[] = [];
 
-// Directly process adminPath
-adminPath.forEach(({ path, element, children }) => {
-  if (path && element) {
-    // Add to routes
-    adminRoutes.push({ path, element });
-  }
+// // Directly process adminPath
+// adminPath.forEach(({ path, element, children }) => {
+//   if (path && element) {
+//     // Add to routes
+//     adminRoutes.push({ path, element });
+//   }
 
-  if (children) {
-    children.forEach(({ path: childPath, element: childElement }) => {
-      if (childPath && childElement) {
-        adminRoutes.push({ path: childPath, element: childElement });
-      }
-    });
-  }
-});
+//   if (children) {
+//     children.forEach(({ path: childPath, element: childElement }) => {
+//       if (childPath && childElement) {
+//         adminRoutes.push({ path: childPath, element: childElement });
+//       }
+//     });
+//   }
+// });
 
 //* Generate dynamic Menu Items
 export const adminSideBarItems: TSidebarItems[] = [];
