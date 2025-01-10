@@ -1,20 +1,7 @@
-import { ReactNode } from "react";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import CreateAdmin from "../pages/admin/CreateAdmin";
 import CreateFaculty from "../pages/admin/CreateFaculty";
 import CreateStudent from "../pages/admin/CreateStudent";
-import { NavLink } from "react-router";
-
-// type TRoute = {
-//   path: string;
-//   element: ReactNode;
-// };
-
-type TSidebarItems = {
-  key: string;
-  label: ReactNode;
-  children?: TSidebarItems[];
-};
 
 export const adminPath = [
   {
@@ -64,33 +51,33 @@ export const adminPath = [
 // });
 
 //* Generate dynamic Menu Items
-export const adminSideBarItems: TSidebarItems[] = [];
-adminPath.forEach(({ name, path, children }) => {
-  if (path) {
-    adminSideBarItems.push({
-      key: path,
-      label: <NavLink to={`/admin/${path}`}>{name}</NavLink>,
-    });
-  }
+// export const adminSideBarItems: TSidebarItems[] = [];
+// adminPath.forEach(({ name, path, children }) => {
+//   if (path) {
+//     adminSideBarItems.push({
+//       key: path,
+//       label: <NavLink to={`/admin/${path}`}>{name}</NavLink>,
+//     });
+//   }
 
-  if (children) {
-    const childMenuItems: TSidebarItems[] = [];
-    children.forEach(({ name: childName, path: childPath }) => {
-      if (childPath) {
-        childMenuItems.push({
-          key: childPath,
-          label: <NavLink to={`/admin/${childPath}`}>{childName}</NavLink>,
-        });
-      }
-    });
+//   if (children) {
+//     const childMenuItems: TSidebarItems[] = [];
+//     children.forEach(({ name: childName, path: childPath }) => {
+//       if (childPath) {
+//         childMenuItems.push({
+//           key: childPath,
+//           label: <NavLink to={`/admin/${childPath}`}>{childName}</NavLink>,
+//         });
+//       }
+//     });
 
-    adminSideBarItems.push({
-      key: name,
-      label: name,
-      children: childMenuItems,
-    });
-  }
-});
+//     adminSideBarItems.push({
+//       key: name,
+//       label: name,
+//       children: childMenuItems,
+//     });
+//   }
+// });
 
 //! hardcode routes
 // export const adminPath = [

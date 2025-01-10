@@ -26,8 +26,6 @@ const adminPath2 = [
   },
 ];
 
-// const processAdminPath = (paths) => {};
-
 // 1. Generate Routes
 export const adminRoutes = [];
 

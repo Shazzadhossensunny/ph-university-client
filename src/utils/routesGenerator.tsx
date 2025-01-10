@@ -12,7 +12,6 @@ type TUserPath = {
 };
 
 export const mainRoutesGenerator = (items: TUserPath[]) => {
-  console.log(items);
   const routes: TRoute[] = [];
   // Directly process adminPath
   items.forEach(({ path, element, children }) => {
