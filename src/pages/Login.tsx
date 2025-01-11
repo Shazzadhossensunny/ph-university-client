@@ -3,7 +3,12 @@ import { useForm } from "react-hook-form";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 
 export default function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      id: "0001",
+      password: "admin12345",
+    },
+  });
   const [login, { data, error }] = useLoginMutation();
 
   console.log("data =>", data);
