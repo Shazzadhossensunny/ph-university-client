@@ -5,6 +5,11 @@ import { useAppDispatch } from "../redux/hook";
 import { setUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
 
+type TData = {
+  id: string;
+  password: string;
+};
+
 export default function Login() {
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -15,15 +20,16 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const [login, { error }] = useLoginMutation();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: TData) => {
     const userInfo = {
       id: data.id,
       password: data.password,
     };
+
     const result = await login(userInfo).unwrap();
     const user = verifyToken(result.data.accessToken);
-    console.log(user);
     dispatch(setUser({ user: user, token: result.data.accessToken }));
+    console.error("Login error:", error);
   };
 
   return (
