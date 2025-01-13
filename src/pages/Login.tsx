@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export default function Login() {
   const { register, handleSubmit } = useForm({
     defaultValues: {
-      id: "0001",
+      id: "A-0005",
       password: "admin12345",
     },
   });
@@ -32,8 +32,7 @@ export default function Login() {
 
       dispatch(setUser({ user: user, token: result.data.accessToken }));
       toast.success("Logged in", { id: toastId, duration: 2000 });
-      // navigate(`/${user.role}/dashboard`);
-      navigate(`/admin/dashboard`);
+      navigate(`/${user.role}/dashboard`);
     } catch (err) {
       console.error("Login error:", error);
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
