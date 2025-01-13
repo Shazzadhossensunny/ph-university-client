@@ -42,7 +42,7 @@ export default function Sidebar() {
           height: "3.75rem",
         }}
       >
-        <h1 style={{ color: "#fff" }}>PH-UNIVERSITY</h1>
+        <h1 style={{ color: "#fff" }}>PH-UNI</h1>
       </div>
       <Menu
         theme="dark"
