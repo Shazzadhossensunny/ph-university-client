@@ -33,10 +33,8 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       credentials: "include",
     });
     const refreshData = await res.json();
-    console.log(refreshData);
     if (refreshData.data) {
       const user = (api.getState() as RootState).auth.name;
-      console.log(user);
       api.dispatch(
         setUser({
           user,
