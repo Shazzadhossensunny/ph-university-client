@@ -6,14 +6,21 @@ import { setUser, TUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import PHForm from "../components/form/PHForm";
+import PHInput from "../components/form/PHInput";
 
 export default function Login() {
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      id: "A-0005",
-      password: "admin12345",
-    },
-  });
+  // const { register, handleSubmit } = useForm({
+  //   defaultValues: {
+  //     id: "A-0005",
+  //     password: "admin12345",
+  //   },
+  // });
+
+  const defaultValuse = {
+    id: "A-0005",
+    password: "admin12345",
+  };
   const dispatch = useAppDispatch();
   const [login, { error }] = useLoginMutation();
   const navigate = useNavigate();
@@ -49,31 +56,29 @@ export default function Login() {
         height: "100vh",
       }}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <PHForm onSubmit={onSubmit} defaultValues={defaultValuse}>
         <div>
-          <label htmlFor="id">ID</label>
           <br />
-          <input
+          <PHInput
             type="text"
-            placeholder="type id here"
-            id="id"
-            {...register("id")}
+            placeholder="type here id"
+            name="id"
+            label="ID:"
           />
         </div>
         <br />
         <div>
-          <label htmlFor="password">Password</label>
           <br />
-          <input
+          <PHInput
             type="text"
-            placeholder="type password here"
-            id="password"
-            {...register("password")}
+            placeholder="type here password"
+            name="password"
+            label="Password:"
           />
         </div>
         <br />
         <Button htmlType="submit">Submit</Button>
-      </form>
+      </PHForm>
     </div>
   );
 }
