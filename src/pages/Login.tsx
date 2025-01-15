@@ -1,5 +1,5 @@
-import { Button } from "antd";
-import { FieldValues, useForm } from "react-hook-form";
+import { Button, Col, Row } from "antd";
+import { FieldValues } from "react-hook-form";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hook";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
@@ -22,7 +22,7 @@ export default function Login() {
     password: "admin12345",
   };
   const dispatch = useAppDispatch();
-  const [login, { error }] = useLoginMutation();
+  const [login] = useLoginMutation();
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldValues) => {
@@ -41,44 +41,35 @@ export default function Login() {
       toast.success("Logged in", { id: toastId, duration: 2000 });
       navigate(`/${user.role}/dashboard`);
     } catch (err) {
-      console.error("Login error:", error);
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
     }
     // toast.dismiss(toastId);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <PHForm onSubmit={onSubmit} defaultValues={defaultValuse}>
-        <div>
-          <br />
-          <PHInput
-            type="text"
-            placeholder="type here id"
-            name="id"
-            label="ID:"
-          />
-        </div>
-        <br />
-        <div>
-          <br />
-          <PHInput
-            type="text"
-            placeholder="type here password"
-            name="password"
-            label="Password:"
-          />
-        </div>
-        <br />
-        <Button htmlType="submit">Submit</Button>
-      </PHForm>
-    </div>
+    <Row justify="center" align="middle" style={{ height: "100vh" }}>
+      <Col span={6}>
+        <PHForm onSubmit={onSubmit} defaultValues={defaultValuse}>
+          <div>
+            <PHInput
+              type="text"
+              placeholder="type here id"
+              name="id"
+              label="ID"
+            />
+          </div>
+          <div>
+            <PHInput
+              type="text"
+              placeholder="type here password"
+              name="password"
+              label="Password"
+            />
+          </div>
+
+          <Button htmlType="submit">Submit</Button>
+        </PHForm>
+      </Col>
+    </Row>
   );
 }
