@@ -1,41 +1,48 @@
-import { Table, TableColumnsType, TableProps } from "antd";
+import { Button, Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicManagementApi";
+import { TAcademicSemester } from "../../../types/academicManagment.type";
+import { useState } from "react";
+import { TQueryParam } from "../../../types";
 
-interface DataType {
-  key?: React.Key;
-  _id: string;
-  name: string;
-  year: string;
-  startMonth: string;
-  endMonth: string;
-}
+export type TTableData = Pick<
+  TAcademicSemester,
+  "name" | "year" | "startMonth" | "endMonth"
+>;
 
 export default function AcademicSemester() {
-  const { data: semesterData } = useGetAllSemesterQuery(undefined);
+  const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
+  const {
+    data: semesterData,
+    isLoading,
+    isFetching,
+  } = useGetAllSemesterQuery(params);
   const tableData = semesterData?.data?.map(
-    ({ _id, name, year, startMonth, endMonth }: DataType) => ({
-      _id,
+    ({ _id, name, year, startMonth, endMonth }) => ({
+      key: _id,
       name,
       year,
       startMonth,
       endMonth,
     })
   );
-  console.log(tableData);
 
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
       dataIndex: "name",
       showSorterTooltip: { target: "full-header" },
       filters: [
         {
-          text: "Joe",
-          value: "Joe",
+          text: "Autumn",
+          value: "Autumn",
         },
         {
-          text: "Jim",
-          value: "Jim",
+          text: "Summer",
+          value: "Summer",
+        },
+        {
+          text: "Fall",
+          value: "Fall",
         },
       ],
     },
@@ -51,18 +58,40 @@ export default function AcademicSemester() {
       title: "End Month",
       dataIndex: "endMonth",
     },
+    {
+      title: "Actions",
+      render: () => {
+        return (
+          <div>
+            <Button>Update</Button>
+          </div>
+        );
+      },
+    },
   ];
 
-  const onChange: TableProps<DataType>["onChange"] = (
-    pagination,
+  const onChange: TableProps<TTableData>["onChange"] = (
+    _pagination,
     filters,
-    sorter,
+    _sorter,
     extra
   ) => {
-    console.log("params", filters, extra);
+    // console.log("params", { filters, extra });
+    if (extra.action === "filter") {
+      const queryPrams: TQueryParam[] = [];
+      filters.name?.forEach((item) =>
+        queryPrams.push({ name: "name", value: item })
+      );
+      setParams(queryPrams);
+    }
   };
+  //* optional
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
-    <Table<DataType>
+    <Table
+      loading={isFetching}
       columns={columns}
       dataSource={tableData}
       onChange={onChange}
