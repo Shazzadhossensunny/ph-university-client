@@ -4,6 +4,8 @@ import PHSelect from "../../../components/form/PHSelect";
 import { FieldValues } from "react-hook-form";
 import { nameOptions } from "../../../constants/semester";
 import { monthOptions } from "../../../constants/global";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const currentYear = new Date().getFullYear();
 const yearOptions = [0, 1, 2, 3, 4, 5].map((number) => ({
@@ -40,10 +42,20 @@ export default function CreateAcademicSemester() {
     console.log(semesterData);
   };
 
+  const academicSemesterSchema = z.object({
+    name: z.string({ required_error: "Name is required" }),
+    year: z.string({ required_error: "Year is required" }),
+    startMonth: z.string({ required_error: "Start Month is required" }),
+    endMonth: z.string({ required_error: "End Month is required" }),
+  });
+
   return (
     <Row justify="center" align="middle" style={{ height: "100vh" }}>
       <Col span={6}>
-        <PHForm onSubmit={onSubmit}>
+        <PHForm
+          onSubmit={onSubmit}
+          resolver={zodResolver(academicSemesterSchema)}
+        >
           <PHSelect label="Name" name="name" options={nameOptions} />
           <PHSelect label="Year" name="year" options={yearOptions} />
           <PHSelect

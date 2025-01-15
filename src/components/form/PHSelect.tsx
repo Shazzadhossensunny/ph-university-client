@@ -11,7 +11,7 @@ export default function PHSelect({ label, name, options }: TPHSelect) {
   return (
     <Controller
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <Form.Item label={label}>
           <Select
             {...field}
@@ -19,6 +19,7 @@ export default function PHSelect({ label, name, options }: TPHSelect) {
             options={options}
             size="large"
           />
+          {error && <small style={{ color: "red" }}>{error.message}</small>}
         </Form.Item>
       )}
     />
