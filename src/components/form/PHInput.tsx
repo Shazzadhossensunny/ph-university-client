@@ -20,7 +20,13 @@ export default function PHInput({
         name={name}
         render={({ field }) => (
           <Form.Item label={label}>
-            <Input {...field} type={type} id={name} placeholder={placeholder} />
+            <Input
+              {...field}
+              type={type}
+              id={name}
+              placeholder={placeholder}
+              size="large"
+            />
           </Form.Item>
         )}
       />
