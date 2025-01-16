@@ -46,7 +46,9 @@ export default function CreateAcademicSemester() {
       endMonth: data.endMonth,
     };
     try {
-      const res = (await addAcademicSemester(semesterData)) as TResponse;
+      const res = (await addAcademicSemester(
+        semesterData
+      )) as TResponse<FieldValues>;
       if (res.error) {
         toast.error(res.error.data.message, { id: toastId, duration: 2000 });
       } else {
