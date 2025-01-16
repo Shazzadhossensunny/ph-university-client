@@ -83,6 +83,7 @@ export default function AcademicSemester() {
         queryPrams.push({ name: "name", value: item })
       );
       setParams(queryPrams);
+      console.log(queryPrams);
     }
   };
   //* optional

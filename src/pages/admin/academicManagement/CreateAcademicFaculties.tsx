@@ -23,7 +23,6 @@ export default function CreateAcademicFaculties() {
           duration: 2000,
         });
       }
-      console.log(res);
     } catch (error) {
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
     }
