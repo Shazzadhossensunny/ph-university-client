@@ -66,10 +66,10 @@ const academicManagementApi = baseApi.injectEndpoints({
     }),
 
     addAcademicDepartment: builder.mutation({
-      query: (payload) => ({
+      query: (data) => ({
         url: `academic-departments/create-academic-department`,
         method: "POST",
-        body: payload,
+        body: data,
       }),
     }),
   }),
