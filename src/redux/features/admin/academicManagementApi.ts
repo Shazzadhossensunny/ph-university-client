@@ -66,13 +66,6 @@ const academicManagementApi = baseApi.injectEndpoints({
       }),
     }),
 
-    addAcademicDepartment: builder.mutation({
-      query: (data) => ({
-        url: `academic-departments/create-academic-department`,
-        method: "POST",
-        body: data,
-      }),
-    }),
     getAllAcademicDepartment: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -81,10 +74,10 @@ const academicManagementApi = baseApi.injectEndpoints({
             params.append(item.name, item.value as string);
           });
         }
-
         return {
           url: `academic-departments`,
           method: "GET",
+          params: params,
         };
       },
       transformResponse: (response: TResponseRedux<TAcademicDepartment>) => {
@@ -93,6 +86,14 @@ const academicManagementApi = baseApi.injectEndpoints({
           meta: response.meta,
         };
       },
+    }),
+
+    addAcademicDepartment: builder.mutation({
+      query: (data) => ({
+        url: `academic-departments/create-academic-department`,
+        method: "POST",
+        body: data,
+      }),
     }),
   }),
 });
