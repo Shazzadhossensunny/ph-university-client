@@ -38,6 +38,8 @@ export default function CreateAcademicSemester() {
     const selectedOption = nameOptions.find(
       (option) => option.value === data.name
     );
+
+    console.log(selectedOption);
     const semesterData = {
       name: selectedOption?.label || "Unknown",
       code: selectedOption?.value || "Unknown",

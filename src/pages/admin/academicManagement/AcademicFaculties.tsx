@@ -48,15 +48,13 @@ export default function AcademicFaculties() {
     _sorter,
     extra
   ) => {
-    console.log("params", { filters, extra });
+    // console.log("params", { filters, extra });
     if (extra.action === "filter") {
       const queryPrams: TQueryParam[] = [];
       filters.name?.forEach((item) =>
         queryPrams.push({ name: "name", value: item })
       );
       setParams(queryPrams);
-
-      console.log(queryPrams);
     }
   };
   //* optional
