@@ -31,7 +31,7 @@ const yearOptions = [0, 1, 2, 3, 4, 5].map((number) => ({
 // const yearOptions = generateYearOptions();
 
 export default function CreateAcademicSemester() {
-  const [addAcademicSemester, { reset }] = useAddAcademicSemesterMutation();
+  const [addAcademicSemester] = useAddAcademicSemesterMutation();
 
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Creating...");
@@ -61,7 +61,6 @@ export default function CreateAcademicSemester() {
     } catch (error) {
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
     }
-    reset();
   };
 
   const academicSemesterSchema = z.object({

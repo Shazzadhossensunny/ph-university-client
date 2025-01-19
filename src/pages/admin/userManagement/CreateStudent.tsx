@@ -9,27 +9,51 @@ import {
   useGetAllAcademicDepartmentQuery,
   useGetAllSemesterQuery,
 } from "../../../redux/features/admin/academicManagementApi";
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagmentApi";
+import { toast } from "sonner";
+import { TResponse } from "../../../types";
 
 export default function CreateStudent() {
-  // * semister data give to options
+  const [addStudent] = useAddStudentMutation();
+  // * semister data query give to options
   const { data: semisterData, isLoading: sIsloading } =
     useGetAllSemesterQuery(undefined);
+  // * department data query give to options
   const { data: depatrmentData, isLoading: dIsloading } =
     useGetAllAcademicDepartmentQuery(undefined);
+
+  // * semister data options
   const semisterOptions = semisterData?.data?.map((options) => ({
     value: options._id,
     label: `${options.name}-${options.year}`,
   }));
-
+  // * department data options
   const departmentOptions = depatrmentData?.data?.map((options) => ({
     value: options._id,
     label: options.name,
   }));
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Creating...");
+    const studentData = {
+      password: "student123",
+      student: data,
+    };
     const formData = new FormData();
-    // formData.append("data", JSON.stringify(data));
+    formData.append("data", JSON.stringify(studentData));
+    try {
+      const res = (await addStudent(formData)) as TResponse<FieldValues>;
+      if (res.error) {
+        toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.success("Student create successfully", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
     //!this is for development
     //!just for checking
     // console.log(Object.fromEntries(formData));
@@ -57,7 +81,7 @@ export default function CreateStudent() {
             </Col>
             <Col span={24} md={12} lg={8}>
               <PHSelect
-                name="bloodGroup"
+                name="bloogGroup"
                 label="Blood Group"
                 options={bloodGroupOptions}
               />
