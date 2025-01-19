@@ -1,2 +1,4 @@
 export * from "./global.type.ts";
-export * from "./academicManagment.type.ts";
+export * from "./academicManagement.type.ts";
+
+export * from "./userManagment.type.ts";

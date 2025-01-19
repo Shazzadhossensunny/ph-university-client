@@ -1,6 +1,6 @@
 import { Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagementApi";
-import { TAcademicFaculty } from "../../../types/academicManagment.type";
+import { TAcademicFaculty } from "../../../types/academicManagement.type";
 import { useState } from "react";
 import { TQueryParam } from "../../../types";
 

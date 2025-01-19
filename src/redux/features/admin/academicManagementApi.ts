@@ -3,7 +3,7 @@ import {
   TAcademicDepartment,
   TAcademicFaculty,
   TAcademicSemester,
-} from "../../../types/academicManagment.type";
+} from "../../../types/academicManagement.type";
 import { baseApi } from "../../api/baseApi";
 
 const academicManagementApi = baseApi.injectEndpoints({
