@@ -25,6 +25,13 @@ const userManagementApi = baseApi.injectEndpoints({
         };
       },
     }),
+    getStudentById: builder.query({
+      query: (id) => ({
+        url: `/students/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (response: TResponseRedux<TStudent>) => response.data,
+    }),
     addStudent: builder.mutation({
       query: (data) => ({
         url: `/users/create-student`,
@@ -35,5 +42,8 @@ const userManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAddStudentMutation, useGetAllStudentQuery } =
-  userManagementApi;
+export const {
+  useAddStudentMutation,
+  useGetAllStudentQuery,
+  useGetStudentByIdQuery,
+} = userManagementApi;

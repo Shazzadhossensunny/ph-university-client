@@ -12,11 +12,11 @@ export type TStudent = {
   permanentAddress: string;
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
-  profileImg: string;
-  admissionSemester: string;
+  profileImg?: string;
+  admissionSemester: TAdmissionSemester;
   isDeleted: boolean;
-  academicDepartment: string;
-  academicFaculty: string;
+  academicDepartment: TAcademicDepartment;
+  academicFaculty: TAcademicFaculty;
   _id: string;
   __v: number;
   fullName: string;
@@ -45,4 +45,21 @@ export type TLocalGuardian = {
   contactNo: string;
   address: string;
   _id: string;
+};
+
+export type TAdmissionSemester = {
+  name: string;
+  year: string;
+  code: string;
+  startMonth: string;
+  endMonth: string;
+};
+
+export type TAcademicDepartment = {
+  name: string;
+  academicFaculty: string;
+};
+
+export type TAcademicFaculty = {
+  name: string;
 };

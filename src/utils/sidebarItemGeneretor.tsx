@@ -27,11 +27,15 @@ export const sidebadGeneretor = (items: TUserPath[], role: string) => {
     if (children) {
       const childMenuItems: TSidebarItems[] = [];
       children.forEach(({ name: childName, path: childPath }) => {
-        if (childPath) {
-          childMenuItems.push({
-            key: childPath,
-            label: <NavLink to={`/${role}/${childPath}`}>{childName}</NavLink>,
-          });
+        if (childName) {
+          if (childPath) {
+            childMenuItems.push({
+              key: childPath,
+              label: (
+                <NavLink to={`/${role}/${childPath}`}>{childName}</NavLink>
+              ),
+            });
+          }
         }
       });
 

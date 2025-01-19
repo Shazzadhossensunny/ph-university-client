@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { TQueryParam, TStudent } from "../../../types";
 import { useGetAllStudentQuery } from "../../../redux/features/admin/userManagmentApi";
+import { Link } from "react-router";
 
 export type TTableData = Pick<
   TStudent,
@@ -23,7 +24,6 @@ export default function StudentData() {
     isLoading,
     isFetching,
   } = useGetAllStudentQuery([
-    { name: "limit", value: 1 },
     { name: "page", value: page },
     { name: "sort", value: "id" },
     ...params,
@@ -47,7 +47,7 @@ export default function StudentData() {
     {
       title: "Name",
       dataIndex: "fullName",
-      showSorterTooltip: { target: "full-header" },
+      //   showSorterTooltip: { target: "full-header" },
       //   filters: [
       //     {
       //       text: "Autumn",
@@ -74,10 +74,12 @@ export default function StudentData() {
     },
     {
       title: "Actions",
-      render: () => {
+      render: (item) => {
         return (
           <Space>
-            <Button>Details</Button>
+            <Link to={`/admin/student-data/${item?.key}`}>
+              <Button>Details</Button>
+            </Link>
             <Button>Update</Button>
             <Button>Block</Button>
           </Space>

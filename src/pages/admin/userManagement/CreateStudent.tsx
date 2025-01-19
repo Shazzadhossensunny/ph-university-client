@@ -43,7 +43,7 @@ export default function CreateStudent() {
     };
     const formData = new FormData();
     formData.append("data", JSON.stringify(studentData));
-    formData.append("file", data.image);
+    // formData.append("file", data.image);
     try {
       const res = (await addStudent(formData)) as TResponse<FieldValues>;
       if (res.error) {
