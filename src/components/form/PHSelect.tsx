@@ -4,10 +4,16 @@ import { Controller } from "react-hook-form";
 type TPHSelect = {
   label: string;
   name: string;
-  options: { value: string; label: string; disabled?: boolean }[];
+  options: { value: string; label: string; disabled?: boolean }[] | undefined;
+  disabled?: boolean;
 };
 
-export default function PHSelect({ label, name, options }: TPHSelect) {
+export default function PHSelect({
+  label,
+  name,
+  options,
+  disabled,
+}: TPHSelect) {
   return (
     <Controller
       name={name}
@@ -17,6 +23,7 @@ export default function PHSelect({ label, name, options }: TPHSelect) {
             {...field}
             style={{ width: "100%" }}
             options={options}
+            disabled={disabled}
             size="large"
           />
           {error && <small style={{ color: "red" }}>{error.message}</small>}

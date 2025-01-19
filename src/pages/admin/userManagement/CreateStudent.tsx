@@ -12,8 +12,10 @@ import {
 
 export default function CreateStudent() {
   // * semister data give to options
-  const { data: semisterData, isLoading } = useGetAllSemesterQuery(undefined);
-  const { data: depatrmentData } = useGetAllAcademicDepartmentQuery(undefined);
+  const { data: semisterData, isLoading: sIsloading } =
+    useGetAllSemesterQuery(undefined);
+  const { data: depatrmentData, isLoading: dIsloading } =
+    useGetAllAcademicDepartmentQuery(undefined);
   const semisterOptions = semisterData?.data?.map((options) => ({
     value: options._id,
     label: `${options.name}-${options.year}`,
@@ -180,7 +182,7 @@ export default function CreateStudent() {
             <Col span={24} md={12} lg={8}>
               <PHSelect
                 name="admissionSemester"
-                disabled={isLoading}
+                disabled={sIsloading}
                 label="Admission Semester"
                 options={semisterOptions}
               />
@@ -188,7 +190,7 @@ export default function CreateStudent() {
             <Col span={24} md={12} lg={8}>
               <PHSelect
                 name="academicDepartment"
-                disabled={isLoading}
+                disabled={dIsloading}
                 label="Academic Department"
                 options={departmentOptions}
               />
