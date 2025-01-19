@@ -1,7 +1,7 @@
-import { FieldValues } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
-import { Button, Col, Divider, Row } from "antd";
+import { Button, Col, Divider, Form, Row } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { bloodGroupOptions, genderOption } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
@@ -12,6 +12,7 @@ import {
 import { useAddStudentMutation } from "../../../redux/features/admin/userManagmentApi";
 import { toast } from "sonner";
 import { TResponse } from "../../../types";
+import Input from "antd/es/input/Input";
 
 export default function CreateStudent() {
   const [addStudent] = useAddStudentMutation();
@@ -34,6 +35,7 @@ export default function CreateStudent() {
   }));
 
   const onSubmit = async (data: FieldValues) => {
+    // console.log(data);
     const toastId = toast.loading("Creating...");
     const studentData = {
       password: "student123",
@@ -41,6 +43,7 @@ export default function CreateStudent() {
     };
     const formData = new FormData();
     formData.append("data", JSON.stringify(studentData));
+    formData.append("file", data.image);
     try {
       const res = (await addStudent(formData)) as TResponse<FieldValues>;
       if (res.error) {
@@ -84,6 +87,22 @@ export default function CreateStudent() {
                 name="bloogGroup"
                 label="Blood Group"
                 options={bloodGroupOptions}
+              />
+            </Col>
+            <Col span={24} md={12} lg={8}>
+              <Controller
+                name="image"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <Form.Item label="Picture">
+                    <Input
+                      {...field}
+                      value={value?.fileName}
+                      onChange={(e) => onChange(e.target.files?.[0])}
+                      type="file"
+                      size={"large"}
+                    />
+                  </Form.Item>
+                )}
               />
             </Col>
           </Row>
