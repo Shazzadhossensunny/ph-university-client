@@ -22,12 +22,11 @@ export default function AcademicFaculties() {
   }));
 
   // Generate dynamic filters for the "Name" column
-  const nameFilters = tableData
-    ? Array.from(new Set(tableData.map((item) => item.name))).map((name) => ({
-        text: name,
-        value: name,
-      }))
-    : [];
+  const nameFilters =
+    facultyData?.data?.map(({ name }) => ({
+      text: name,
+      value: name,
+    })) || [];
 
   const columns: TableColumnsType<TTableData> = [
     {

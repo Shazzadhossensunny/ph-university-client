@@ -3,10 +3,7 @@ import { useGetAllAcademicDepartmentQuery } from "../../../redux/features/admin/
 import { useState } from "react";
 import { TAcademicDepartment, TQueryParam } from "../../../types";
 
-export type TTableData = Pick<
-  TAcademicDepartment,
-  "_id" | "name" | "academicFaculty"
->;
+export type TTableData = Pick<TAcademicDepartment, "name" | "academicFaculty">;
 
 export default function AcademicDepartment() {
   const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
@@ -21,18 +18,10 @@ export default function AcademicDepartment() {
     ({ _id, name, academicFaculty }) => ({
       key: _id,
       name,
-      faculty: academicFaculty.name,
+      academicFaculty,
     })
   );
 
-  // const tableData = Array.isArray(departmentData?.data)
-  //   ? departmentData.data.map(({ _id, name, academicFaculty }) => ({
-  //       key: _id,
-  //       name,
-  //       faculty: academicFaculty.name,
-  //     }))
-  //   : [];
-  // Generate dynamic filters for department names
   const departmentFilters =
     departmentData?.data?.map(({ name }) => ({
       text: name,
@@ -48,7 +37,7 @@ export default function AcademicDepartment() {
     },
     {
       title: "Faculty",
-      dataIndex: "faculty",
+      dataIndex: ["academicFaculty", "name"],
     },
 
     {
@@ -83,7 +72,7 @@ export default function AcademicDepartment() {
     return <p>Loading...</p>;
   }
   return (
-    <Table
+    <Table<TTableData>
       loading={isFetching}
       columns={columns}
       dataSource={tableData}
