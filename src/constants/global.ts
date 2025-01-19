@@ -115,3 +115,17 @@ export const academicDepartmentOptions = academicDepartments.map(
     label: department.name,
   })
 );
+
+export const genders = ["Male", "Female", "Others"];
+
+export const genderOption = genders.map((item) => ({
+  value: item.toLowerCase(),
+  label: item,
+}));
+
+export const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+export const bloodGroupOptions = bloodGroups.map((item) => ({
+  value: item,
+  label: item,
+}));
