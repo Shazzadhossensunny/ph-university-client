@@ -15,6 +15,7 @@ const userManagementApi = baseApi.injectEndpoints({
           url: `/students`,
           method: "GET",
           params: params,
+          providesTags: ["Students"],
         };
       },
 
@@ -32,6 +33,16 @@ const userManagementApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: TResponseRedux<TStudent>) => response.data,
     }),
+    updateStudentById: builder.mutation({
+      query: ({ id, ...data }) => {
+        if (!id) {
+          throw new Error("Student ID is required to update a student.");
+        }
+        return { url: `/students/${id}`, method: "PATCH", body: data };
+        providesTags: ["Students"];
+      },
+      transformResponse: (response: TResponseRedux<TStudent>) => response.data,
+    }),
     addStudent: builder.mutation({
       query: (data) => ({
         url: `/users/create-student`,
@@ -46,4 +57,5 @@ export const {
   useAddStudentMutation,
   useGetAllStudentQuery,
   useGetStudentByIdQuery,
+  useUpdateStudentByIdMutation,
 } = userManagementApi;

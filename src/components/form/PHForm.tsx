@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import {
   FieldValues,
   FormProvider,
@@ -31,6 +31,11 @@ export default function PHForm({
     formConfig["resolver"] = resolver;
   }
   const methods = useForm(formConfig);
+  useEffect(() => {
+    if (defaultValues) {
+      methods.reset(defaultValues);
+    }
+  }, [defaultValues, methods]);
 
   const submit = (data: FieldValues) => {
     onSubmit(data);

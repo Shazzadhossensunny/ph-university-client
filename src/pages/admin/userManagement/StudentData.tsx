@@ -80,7 +80,9 @@ export default function StudentData() {
             <Link to={`/admin/student-data/${item?.key}`}>
               <Button>Details</Button>
             </Link>
-            <Button>Update</Button>
+            <Link to={`/admin/students/${item?.key}`}>
+              <Button>Update</Button>
+            </Link>
             <Button>Block</Button>
           </Space>
         );
