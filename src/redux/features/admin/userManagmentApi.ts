@@ -50,10 +50,10 @@ const userManagementApi = baseApi.injectEndpoints({
       }),
     }),
     changeUserStatus: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, ...status }) => ({
         url: `/users/change-status/${id}`,
         method: "POST",
-        body: data,
+        body: status,
       }),
     }),
   }),

@@ -129,3 +129,10 @@ export const bloodGroupOptions = bloodGroups.map((item) => ({
   value: item,
   label: item,
 }));
+
+export const userStatus = ["in-progress", "blocked"];
+
+export const userStatusOptions = userStatus.map((item) => ({
+  value: item,
+  label: item.toUpperCase(),
+}));

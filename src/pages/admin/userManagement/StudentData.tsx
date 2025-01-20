@@ -17,6 +17,8 @@ import { Link } from "react-router";
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { userStatusOptions } from "../../../constants/global";
+import { toast } from "sonner";
 
 export type TTableData = Pick<
   TStudent,
@@ -28,6 +30,7 @@ export default function StudentData() {
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
   const {
     data: studentData,
     isLoading,
@@ -39,43 +42,49 @@ export default function StudentData() {
   ]);
   const metaData = studentData?.meta;
   const tableData = studentData?.data?.map(
-    ({ _id, id, fullName, email, contactNo }) => ({
+    ({ _id, id, fullName, user, email, contactNo }) => ({
       key: _id,
       id,
       fullName,
       email,
       contactNo,
+      user,
     })
   );
 
   const [changeUserStatus, { isLoading: isChangingStatus }] =
     useChangeUserStatusMutation();
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // console.log(data);
-    if (!selectedUserId) return;
-    const updateInfo = {
-      id: selectedUserId,
-      data,
-    };
-
-    console.log(updateInfo);
-    try {
-      const res = await changeUserStatus(updateInfo);
-      console.log(res);
-      setIsModalOpen(false); // Close modal on success
-    } catch (error) {
-      console.error("Error updating user status:", error);
-    }
-  };
-
   const handleClick = (id: string) => {
-    setSelectedUserId(id); // Set the selected user ID
-    setIsModalOpen(true); // Open the modal
+    setSelectedUserId(id);
+    setIsModalOpen(true);
   };
   const handleCancel = () => {
-    setIsModalOpen(false); // Close the modal
-    setSelectedUserId(null); // Clear the selected user ID
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
+
+  const onSubmit: SubmitHandler<FieldValues> = async (payload) => {
+    const toastId = toast.loading("Status...");
+    const changeStatus = {
+      id: selectedUserId,
+      ...payload,
+    };
+
+    try {
+      const res = await changeUserStatus(changeStatus).unwrap();
+      if (res.error) {
+        toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.success(`Student ${payload.status} successfully`, {
+          id: toastId,
+          duration: 2000,
+        });
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
   };
 
   const columns: TableColumnsType<TTableData> = [
@@ -122,7 +131,9 @@ export default function StudentData() {
             <Link to={`/admin/students/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-            <Button onClick={() => handleClick(`${item?.key}`)}>Block</Button>
+            <Button onClick={() => handleClick(`${item?.user?._id}`)}>
+              Block
+            </Button>
           </Space>
         );
       },
@@ -175,15 +186,10 @@ export default function StudentData() {
         footer={null}
       >
         <PHForm onSubmit={onSubmit}>
-          <PHSelect
-            name="status"
-            label="Status"
-            options={[
-              { value: "in-progress", label: "In Progress" },
-              { value: "blocked", label: "Blocked" },
-            ]}
-          />
-          <Button htmlType="submit">Submit</Button>
+          <PHSelect name="status" label="Status" options={userStatusOptions} />
+          <Button htmlType="submit" loading={isChangingStatus}>
+            Submit
+          </Button>
         </PHForm>
       </Modal>
     </>
