@@ -76,7 +76,7 @@ export default function AdminData() {
       if (res.error) {
         toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
       } else {
-        toast.success(`Student ${payload.status} successfully`, {
+        toast.success(`Admin ${payload.status} successfully`, {
           id: toastId,
           duration: 2000,
         });
