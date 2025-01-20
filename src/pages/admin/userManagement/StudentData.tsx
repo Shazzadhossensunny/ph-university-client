@@ -1,5 +1,6 @@
 import {
   Button,
+  Modal,
   Pagination,
   Space,
   Table,
@@ -8,8 +9,14 @@ import {
 } from "antd";
 import { useState } from "react";
 import { TQueryParam, TStudent } from "../../../types";
-import { useGetAllStudentQuery } from "../../../redux/features/admin/userManagmentApi";
+import {
+  useChangeUserStatusMutation,
+  useGetAllStudentQuery,
+} from "../../../redux/features/admin/userManagmentApi";
 import { Link } from "react-router";
+import PHForm from "../../../components/form/PHForm";
+import PHSelect from "../../../components/form/PHSelect";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 
 export type TTableData = Pick<
   TStudent,
@@ -19,6 +26,8 @@ export type TTableData = Pick<
 export default function StudentData() {
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const {
     data: studentData,
     isLoading,
@@ -38,6 +47,36 @@ export default function StudentData() {
       contactNo,
     })
   );
+
+  const [changeUserStatus, { isLoading: isChangingStatus }] =
+    useChangeUserStatusMutation();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    // console.log(data);
+    if (!selectedUserId) return;
+    const updateInfo = {
+      id: selectedUserId,
+      data,
+    };
+
+    console.log(updateInfo);
+    try {
+      const res = await changeUserStatus(updateInfo);
+      console.log(res);
+      setIsModalOpen(false); // Close modal on success
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  };
+
+  const handleClick = (id: string) => {
+    setSelectedUserId(id); // Set the selected user ID
+    setIsModalOpen(true); // Open the modal
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false); // Close the modal
+    setSelectedUserId(null); // Clear the selected user ID
+  };
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -83,7 +122,7 @@ export default function StudentData() {
             <Link to={`/admin/students/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-            <Button>Block</Button>
+            <Button onClick={() => handleClick(`${item?.key}`)}>Block</Button>
           </Space>
         );
       },
@@ -128,6 +167,25 @@ export default function StudentData() {
         onChange={(value) => setPage(value)}
         total={metaData?.totalPage}
       />
+      <Modal
+        title="Change User Status"
+        open={isModalOpen}
+        confirmLoading={isChangingStatus}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <PHForm onSubmit={onSubmit}>
+          <PHSelect
+            name="status"
+            label="Status"
+            options={[
+              { value: "in-progress", label: "In Progress" },
+              { value: "blocked", label: "Blocked" },
+            ]}
+          />
+          <Button htmlType="submit">Submit</Button>
+        </PHForm>
+      </Modal>
     </>
   );
 }
