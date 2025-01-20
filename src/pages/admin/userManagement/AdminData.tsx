@@ -128,12 +128,10 @@ export default function AdminData() {
             <Link to={`/admin/admin-data/${item?.key}`}>
               <Button>Details</Button>
             </Link>
-            <Link to={`/admin/students/${item?.key}`}>
+            <Link to={`/admin/admins/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-            <Button onClick={() => handleClick(`${item?.user?._id}`)}>
-              Block
-            </Button>
+            <Button onClick={() => handleClick(`${item?.user}`)}>Block</Button>
           </Space>
         );
       },

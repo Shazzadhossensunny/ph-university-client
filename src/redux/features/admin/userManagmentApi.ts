@@ -93,6 +93,15 @@ const userManagementApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    updateAdminById: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/admins/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      transformResponse: (response: TResponseRedux<TStudent>) => response.data,
+      invalidatesTags: ["Admins"],
+    }),
   }),
 });
 
@@ -105,4 +114,5 @@ export const {
   useAddAdminMutation,
   useGetAllAdminQuery,
   useGetAdminByIdQuery,
+  useUpdateAdminByIdMutation,
 } = userManagementApi;
