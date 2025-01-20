@@ -102,6 +102,13 @@ const userManagementApi = baseApi.injectEndpoints({
       transformResponse: (response: TResponseRedux<TStudent>) => response.data,
       invalidatesTags: ["Admins"],
     }),
+    addFaculty: builder.mutation({
+      query: (data) => ({
+        url: `/users/create-faculty`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -115,4 +122,5 @@ export const {
   useGetAllAdminQuery,
   useGetAdminByIdQuery,
   useUpdateAdminByIdMutation,
+  useAddFacultyMutation,
 } = userManagementApi;

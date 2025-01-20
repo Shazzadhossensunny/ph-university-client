@@ -93,3 +93,32 @@ export type TAName = {
   middleName: string;
   lastName: string;
 };
+
+// ! faculty
+export type TFaculty = {
+  id: string;
+  user: string;
+  designation: string;
+  name: TFName;
+  gender: string;
+  dateOfBirth: string;
+  email: string;
+  contactNo: string;
+  emergencyContactNo: string;
+  bloogGroup: string;
+  presentAddress: string;
+  permanentAddress: string;
+  profileImg: string;
+  academicDepartment: TAcademicDepartment;
+  academicFaculty: TAcademicFaculty;
+  isDeleted: boolean;
+  _id: string;
+  __v: number;
+  fullName: string;
+};
+
+export type TFName = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+};
