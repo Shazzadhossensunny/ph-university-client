@@ -66,3 +66,29 @@ export type TAcademicFaculty = {
   name: string;
   _id: string;
 };
+
+//! admin
+export type TAdmin = {
+  id: string;
+  user: string;
+  designation: string;
+  name: TAName;
+  gender: string;
+  dateOfBirth: string;
+  email: string;
+  contactNo: string;
+  emergencyContactNo: string;
+  bloogGroup: string;
+  presentAddress: string;
+  permanentAddress: string;
+  profileImg: string;
+  isDeleted: boolean;
+  __v: number;
+  fullName: string;
+};
+
+export type TAName = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+};
