@@ -1,4 +1,4 @@
-import { Controller, FieldValues } from "react-hook-form";
+import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
 import { Button, Col, Divider, Form, Row } from "antd";
@@ -8,57 +8,81 @@ import PHDatePicker from "../../../components/form/PHDatePicker";
 import {
   useGetAllAcademicDepartmentQuery,
   useGetAllAcademicFacultiesQuery,
-  useGetAllSemesterQuery,
 } from "../../../redux/features/admin/academicManagementApi";
-import { useAddStudentMutation } from "../../../redux/features/admin/userManagmentApi";
 import { toast } from "sonner";
 import { TResponse } from "../../../types";
 import Input from "antd/es/input/Input";
+import { useParams } from "react-router";
+import {
+  useGetAllFacultyQuery,
+  useUpdateFacultyByIdMutation,
+} from "../../../redux/features/admin/userManagmentApi";
 
-export default function CreateStudent() {
-  const [addStudent] = useAddStudentMutation();
-  // * semister data query give to options
-  const { data: semisterData, isLoading: sIsloading } =
-    useGetAllSemesterQuery(undefined);
+export default function FacultyUpdate() {
+  const { facultyId } = useParams();
+  const [updateFacultyById] = useUpdateFacultyByIdMutation();
+
+  const { data: facultyData } = useGetAllFacultyQuery(undefined);
+
+  const findByIdFacultyData = facultyData?.data?.find(
+    (faculty) => faculty?._id === facultyId
+  );
+
+  const facultyDefaultValue = findByIdFacultyData
+    ? {
+        designation: findByIdFacultyData.designation || "",
+        name: {
+          firstName: findByIdFacultyData.name?.firstName || "",
+          middleName: findByIdFacultyData.name?.middleName || "",
+          lastName: findByIdFacultyData.name?.lastName || "",
+        },
+        gender: findByIdFacultyData.gender || "",
+        dateOfBirth: findByIdFacultyData?.dateOfBirth
+          ? new Date(findByIdFacultyData?.dateOfBirth)
+          : null,
+        email: findByIdFacultyData.email || "",
+        contactNo: findByIdFacultyData.contactNo || "",
+        emergencyContactNo: findByIdFacultyData.emergencyContactNo || "",
+        bloogGroup: findByIdFacultyData.bloogGroup || "",
+        presentAddress: findByIdFacultyData.presentAddress || "",
+        permanentAddress: findByIdFacultyData.permanentAddress || "",
+        academicDepartment: findByIdFacultyData.academicDepartment?._id || "",
+        academicFaculty: findByIdFacultyData.academicFaculty?._id || "",
+      }
+    : {}; // Default empty object if no data is found
+
   // * department data query give to options
   const { data: depatrmentData, isLoading: dIsloading } =
     useGetAllAcademicDepartmentQuery(undefined);
-  // * academic faculty data query give to options
-  const { data: academicFacultyData, isLoading: fIsloading } =
+  const { data: academicFaculty, isLoading: fIsloading } =
     useGetAllAcademicFacultiesQuery(undefined);
 
-  // * semister data options
-  const semisterOptions = semisterData?.data?.map((options) => ({
+  // * faculty data options
+  const facultyOptions = academicFaculty?.data?.map((options) => ({
     value: options._id,
-    label: `${options.name}-${options.year}`,
+    label: options.name,
   }));
   // * department data options
   const departmentOptions = depatrmentData?.data?.map((options) => ({
     value: options._id,
     label: options.name,
   }));
-  // * department data options
-  const academicFacultyOptions = academicFacultyData?.data?.map((options) => ({
-    value: options._id,
-    label: options.name,
-  }));
 
-  const onSubmit = async (data: FieldValues) => {
-    // console.log(data);
-    const toastId = toast.loading("Creating...");
-    const studentData = {
-      password: "student123",
-      student: data,
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Updating...");
+
+    const facultyData = {
+      id: facultyId,
+      faculty: { ...data },
     };
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(studentData));
-    // formData.append("file", data.image);
     try {
-      const res = (await addStudent(formData)) as TResponse<FieldValues>;
+      const res = (await updateFacultyById(
+        facultyData
+      )) as TResponse<FieldValues>;
       if (res.error) {
         toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
       } else {
-        toast.success("Student create successfully", {
+        toast.success("Faculty update successfully", {
           id: toastId,
           duration: 2000,
         });
@@ -66,16 +90,17 @@ export default function CreateStudent() {
     } catch (error) {
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
     }
-    //!this is for development
-    //!just for checking
-    // console.log(Object.fromEntries(formData));
   };
+
   return (
     <Row>
       <Col span={24}>
-        <PHForm onSubmit={onSubmit}>
+        <PHForm onSubmit={onSubmit} defaultValues={facultyDefaultValue}>
           <Divider orientation="center">Personal Information</Divider>
           <Row gutter={16}>
+            <Col span={24} md={12} lg={8}>
+              <PHInput type="text" name="designation" label="Designation" />
+            </Col>
             <Col span={24} md={12} lg={8}>
               <PHInput type="text" name="name.firstName" label="First Name" />
             </Col>
@@ -151,94 +176,8 @@ export default function CreateStudent() {
             </Col>
           </Row>
 
-          <Divider orientation="center">Guardian Information</Divider>
-          <Row gutter={16}>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.fatherName"
-                label="Father's Name"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.fatherOccupation"
-                label="Father's Occupation"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.fatherContactNo"
-                label="Father's Contact Number"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.motherName"
-                label="Mother's Name"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.motherOccupation"
-                label="Mother's Occupation"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="guardian.motherContactNo"
-                label="Mother's Contact Number"
-              />
-            </Col>
-          </Row>
-
-          <Divider orientation="center">Local Guardian Information</Divider>
-          <Row gutter={16}>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="localGuardian.name"
-                label="Local Guardian Name"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="localGuardian.occupation"
-                label="Local Guardian Occupation"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="localGuardian.contactNo"
-                label="Local Guardian Contact Number"
-              />
-            </Col>
-            <Col span={24} md={12} lg={8}>
-              <PHInput
-                type="text"
-                name="localGuardian.address"
-                label="Local Guardian Address"
-              />
-            </Col>
-          </Row>
-
           <Divider orientation="center">Academic Information</Divider>
           <Row gutter={16}>
-            <Col span={24} md={12} lg={8}>
-              <PHSelect
-                name="admissionSemester"
-                disabled={sIsloading}
-                label="Admission Semester"
-                options={semisterOptions}
-              />
-            </Col>
             <Col span={24} md={12} lg={8}>
               <PHSelect
                 name="academicDepartment"
@@ -252,7 +191,7 @@ export default function CreateStudent() {
                 name="academicFaculty"
                 disabled={fIsloading}
                 label="Academic Faculty"
-                options={academicFacultyOptions}
+                options={facultyOptions}
               />
             </Col>
           </Row>

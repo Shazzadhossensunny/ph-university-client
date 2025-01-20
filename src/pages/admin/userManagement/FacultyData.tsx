@@ -125,15 +125,13 @@ export default function FacultyData() {
       render: (item) => {
         return (
           <Space>
-            <Link to={`/admin/student-data/${item?.key}`}>
+            <Link to={`/admin/faculty-data/${item?.key}`}>
               <Button>Details</Button>
             </Link>
-            <Link to={`/admin/students/${item?.key}`}>
+            <Link to={`/admin/faculties/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-            <Button onClick={() => handleClick(`${item?.user?._id}`)}>
-              Block
-            </Button>
+            <Button onClick={() => handleClick(`${item?.user}`)}>Block</Button>
           </Space>
         );
       },

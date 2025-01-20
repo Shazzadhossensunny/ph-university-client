@@ -7,6 +7,7 @@ import { bloodGroupOptions, genderOption } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import {
   useGetAllAcademicDepartmentQuery,
+  useGetAllAcademicFacultiesQuery,
   useGetAllSemesterQuery,
 } from "../../../redux/features/admin/academicManagementApi";
 import { toast } from "sonner";
@@ -63,6 +64,7 @@ export default function StudentUpdate() {
         },
         admissionSemester: findByIdStudentData.admissionSemester?._id || "",
         academicDepartment: findByIdStudentData.academicDepartment?._id || "",
+        academicFaculty: findByIdStudentData.academicFaculty?._id || "",
       }
     : {}; // Default empty object if no data is found
 
@@ -73,6 +75,10 @@ export default function StudentUpdate() {
   const { data: depatrmentData, isLoading: dIsloading } =
     useGetAllAcademicDepartmentQuery(undefined);
 
+  // * academic faculty data query give to options
+  const { data: academicFacultyData, isLoading: fIsloading } =
+    useGetAllAcademicFacultiesQuery(undefined);
+
   // * semister data options
   const semisterOptions = semisterData?.data?.map((options) => ({
     value: options._id,
@@ -80,6 +86,11 @@ export default function StudentUpdate() {
   }));
   // * department data options
   const departmentOptions = depatrmentData?.data?.map((options) => ({
+    value: options._id,
+    label: options.name,
+  }));
+  // * department data options
+  const academicFacultyOptions = academicFacultyData?.data?.map((options) => ({
     value: options._id,
     label: options.name,
   }));
@@ -283,6 +294,14 @@ export default function StudentUpdate() {
                 disabled={dIsloading}
                 label="Academic Department"
                 options={departmentOptions}
+              />
+            </Col>
+            <Col span={24} md={12} lg={8}>
+              <PHSelect
+                name="academicFaculty"
+                disabled={fIsloading}
+                label="Academic Faculty"
+                options={academicFacultyOptions}
               />
             </Col>
           </Row>

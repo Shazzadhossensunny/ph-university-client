@@ -138,6 +138,22 @@ const userManagementApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    getFacultyById: builder.query({
+      query: (id) => ({
+        url: `/faculties/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (response: TResponseRedux<TFaculty>) => response.data,
+    }),
+    updateFacultyById: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/faculties/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      transformResponse: (response: TResponseRedux<TFaculty>) => response.data,
+      invalidatesTags: ["Faculty"],
+    }),
   }),
 });
 
@@ -153,4 +169,6 @@ export const {
   useUpdateAdminByIdMutation,
   useAddFacultyMutation,
   useGetAllFacultyQuery,
+  useGetFacultyByIdQuery,
+  useUpdateFacultyByIdMutation,
 } = userManagementApi;
