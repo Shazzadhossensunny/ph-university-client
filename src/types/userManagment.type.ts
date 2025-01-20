@@ -53,13 +53,16 @@ export type TAdmissionSemester = {
   code: string;
   startMonth: string;
   endMonth: string;
+  _id: string;
 };
 
 export type TAcademicDepartment = {
   name: string;
   academicFaculty: string;
+  _id: string;
 };
 
 export type TAcademicFaculty = {
   name: string;
+  _id: string;
 };

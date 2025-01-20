@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { TResponse } from "../../../types";
 import Input from "antd/es/input/Input";
-import { data, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   useGetAllStudentQuery,
   useUpdateStudentByIdMutation,
@@ -85,16 +85,29 @@ export default function StudentUpdate() {
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // const toastId = toast.loading("Creating...");
+    const toastId = toast.loading("Updating...");
 
     const studentData = {
       id: studentId,
-      ...data,
+      student: { ...data },
     };
-    console.log(studentData);
-    const res = updateStudentById(studentData);
-    console.log(res);
+    try {
+      const res = (await updateStudentById(
+        studentData
+      )) as TResponse<FieldValues>;
+      if (res.error) {
+        toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.success("Student update successfully", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
   };
+
   return (
     <Row>
       <Col span={24}>

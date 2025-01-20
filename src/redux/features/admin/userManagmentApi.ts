@@ -15,7 +15,6 @@ const userManagementApi = baseApi.injectEndpoints({
           url: `/students`,
           method: "GET",
           params: params,
-          providesTags: ["Students"],
         };
       },
 
@@ -25,6 +24,7 @@ const userManagementApi = baseApi.injectEndpoints({
           meta: response.meta,
         };
       },
+      providesTags: ["Students"],
     }),
     getStudentById: builder.query({
       query: (id) => ({
@@ -34,14 +34,13 @@ const userManagementApi = baseApi.injectEndpoints({
       transformResponse: (response: TResponseRedux<TStudent>) => response.data,
     }),
     updateStudentById: builder.mutation({
-      query: ({ id, ...data }) => {
-        if (!id) {
-          throw new Error("Student ID is required to update a student.");
-        }
-        return { url: `/students/${id}`, method: "PATCH", body: data };
-        providesTags: ["Students"];
-      },
+      query: ({ id, ...data }) => ({
+        url: `/students/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
       transformResponse: (response: TResponseRedux<TStudent>) => response.data,
+      invalidatesTags: ["Students"],
     }),
     addStudent: builder.mutation({
       query: (data) => ({
