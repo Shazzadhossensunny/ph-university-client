@@ -125,7 +125,7 @@ export default function AdminData() {
       render: (item) => {
         return (
           <Space>
-            <Link to={`/admin/student-data/${item?.key}`}>
+            <Link to={`/admin/admin-data/${item?.key}`}>
               <Button>Details</Button>
             </Link>
             <Link to={`/admin/students/${item?.key}`}>

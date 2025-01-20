@@ -79,6 +79,13 @@ const userManagementApi = baseApi.injectEndpoints({
       },
       providesTags: ["Admins"],
     }),
+    getAdminById: builder.query({
+      query: (id) => ({
+        url: `/admins/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (response: TResponseRedux<TAdmin>) => response.data,
+    }),
     addAdmin: builder.mutation({
       query: (data) => ({
         url: `/users/create-admin`,
@@ -97,4 +104,5 @@ export const {
   useChangeUserStatusMutation,
   useAddAdminMutation,
   useGetAllAdminQuery,
+  useGetAdminByIdQuery,
 } = userManagementApi;
