@@ -83,6 +83,7 @@ export type TAdmin = {
   permanentAddress: string;
   profileImg: string;
   isDeleted: boolean;
+  _id: string;
   __v: number;
   fullName: string;
 };
