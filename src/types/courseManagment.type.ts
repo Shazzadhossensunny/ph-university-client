@@ -12,3 +12,19 @@ export type TRegisteredSemester = {
   updatedAt: string;
   __v: number;
 };
+
+export type TCourse = {
+  _id: string;
+  title: string;
+  prefix: string;
+  code: number;
+  credits: number;
+  preRequisiteCourses: TPreRequisiteCourse[];
+  isDeleted: boolean;
+  __v: number;
+};
+
+export type TPreRequisiteCourse = {
+  course: any;
+  isDeleted: boolean;
+};

@@ -6,6 +6,7 @@ type TPHSelect = {
   name: string;
   options: { value: string; label: string; disabled?: boolean }[] | undefined;
   disabled?: boolean;
+  mode?: "multiple" | undefined;
 };
 
 export default function PHSelect({
@@ -13,6 +14,7 @@ export default function PHSelect({
   name,
   options,
   disabled,
+  mode,
 }: TPHSelect) {
   return (
     <Controller
@@ -25,6 +27,7 @@ export default function PHSelect({
             options={options}
             disabled={disabled}
             size="large"
+            mode={mode}
           />
           {error && <small style={{ color: "red" }}>{error.message}</small>}
         </Form.Item>
