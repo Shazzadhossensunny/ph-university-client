@@ -1,31 +1,87 @@
-import { Button, Table, TableColumnsType, TableProps } from "antd";
-import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicManagementApi";
-import { TAcademicSemester } from "../../../types/academicManagement.type";
+import {
+  Button,
+  Dropdown,
+  MenuProps,
+  Space,
+  Table,
+  TableColumnsType,
+  Tag,
+} from "antd";
+
+import { TRegisteredSemester, TResponse } from "../../../types";
+import {
+  useAcademicSemesterRegisteredStatusUpdateMutation,
+  useGetAllRegisteredSemesterQuery,
+} from "../../../redux/features/admin/courseManagementApi";
+import moment from "moment";
 import { useState } from "react";
-import { TQueryParam, TRegisteredSemester } from "../../../types";
-import { useGetAllRegisteredSemesterQuery } from "../../../redux/features/admin/courseManagementApi";
+import { toast } from "sonner";
+import { FieldValues } from "react-hook-form";
+// import { DownOutlined } from "@ant-design/icons";
 
 export type TTableData = Pick<
   TRegisteredSemester,
-  "academicSemester" | "status" | "startDate" | "endDate"
+  "status" | "startDate" | "endDate"
 >;
 
+const items: MenuProps["items"] = [
+  {
+    label: "UPCOMING",
+    key: "UPCOMING",
+  },
+  {
+    label: "ONGOING",
+    key: "ONGOING",
+  },
+  {
+    label: "ENDED",
+    key: "ENDED",
+  },
+];
+
 export default function RegisteredSemester() {
-  //   const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
-  const {
-    data: registeredSemesterData,
-    isLoading,
-    isFetching,
-  } = useGetAllRegisteredSemesterQuery(undefined);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [academicSemesterRegisteredStatusUpdate] =
+    useAcademicSemesterRegisteredStatusUpdateMutation();
+  const { data: registeredSemesterData, isFetching } =
+    useGetAllRegisteredSemesterQuery(undefined);
   const tableData = registeredSemesterData?.data?.map(
     ({ _id, academicSemester, status, startDate, endDate }) => ({
       key: _id,
-      name: `${academicSemester.name}-${academicSemester.year}`,
+      name: `${academicSemester?.name}-${academicSemester?.year}`,
       status,
-      startDate,
-      endDate,
+      startDate: moment(new Date(startDate)).format("MMMM"),
+      endDate: moment(new Date(endDate)).format("MMMM"),
     })
   );
+
+  const handleStatusUpdate: MenuProps["onClick"] = async (data) => {
+    const toastId = toast.loading("Updating...");
+    const updateStatus = {
+      id: selectedId,
+      status: data.key,
+    };
+    try {
+      const res = (await academicSemesterRegisteredStatusUpdate(
+        updateStatus
+      )) as TResponse<FieldValues>;
+      if (res.error) {
+        toast.error(res.error?.data?.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.success(`Successfully ${res.data?.status}  update`, {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
+  };
+
+  const menuProps = {
+    items,
+    onClick: handleStatusUpdate,
+  };
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -35,6 +91,19 @@ export default function RegisteredSemester() {
     {
       title: "Status",
       dataIndex: "status",
+      render: (item) => {
+        let color;
+        if (item === "UPCOMING") {
+          color = "blue";
+        }
+        if (item === "ONGOING") {
+          color = "green";
+        }
+        if (item === "ENDED") {
+          color = "red";
+        }
+        return <Tag color={color}>{item}</Tag>;
+      },
     },
     {
       title: "Start Date",
@@ -46,25 +115,21 @@ export default function RegisteredSemester() {
     },
     {
       title: "Actions",
-      render: () => {
+      render: (item) => {
         return (
-          <div>
-            <Button>Update</Button>
-          </div>
+          <Dropdown menu={menuProps} trigger={["click"]} arrow>
+            <Space>
+              <Button onClick={() => setSelectedId(item.key)}>Update</Button>
+              {/* <DownOutlined /> */}
+            </Space>
+          </Dropdown>
         );
       },
+      width: "1%",
     },
   ];
 
-  //* optional
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
   return (
-    <Table<TTableData>
-      loading={isFetching}
-      columns={columns}
-      dataSource={tableData}
-    />
+    <Table loading={isFetching} columns={columns} dataSource={tableData} />
   );
 }
