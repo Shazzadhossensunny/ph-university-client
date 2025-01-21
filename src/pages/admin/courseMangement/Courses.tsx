@@ -1,11 +1,17 @@
-import { Button, Table, TableColumnsType } from "antd";
+import { Button, Pagination, Table, TableColumnsType } from "antd";
 import { TCourse } from "../../../types";
 import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagementApi";
+import { useState } from "react";
 
 export type TTableData = Pick<TCourse, "title" | "code" | "prefix">;
 
 export default function Courses() {
-  const { data: courseData, isFetching } = useGetAllCoursesQuery(undefined);
+  const [page, setPage] = useState(1);
+  const { data: courseData, isFetching } = useGetAllCoursesQuery([
+    { name: "page", value: page },
+    { name: "sort", value: "id" },
+  ]);
+  const metaData = courseData?.meta;
   const tableData = courseData?.data?.map(({ _id, title, code, prefix }) => ({
     key: _id,
     title,
@@ -31,7 +37,7 @@ export default function Courses() {
       render: () => {
         return (
           <div>
-            <Button>Assign</Button>
+            <Button>Assign To</Button>
           </div>
         );
       },
@@ -40,6 +46,21 @@ export default function Courses() {
   ];
 
   return (
-    <Table loading={isFetching} columns={columns} dataSource={tableData} />
+    <>
+      <Table
+        loading={isFetching}
+        columns={columns}
+        dataSource={tableData}
+        pagination={false}
+      />
+      <Pagination
+        style={{ marginTop: "15px" }}
+        align="end"
+        current={page}
+        pageSize={metaData?.limit}
+        onChange={(value) => setPage(value)}
+        total={metaData?.totalPage}
+      />
+    </>
   );
 }
