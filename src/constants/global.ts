@@ -136,3 +136,11 @@ export const userStatusOptions = userStatus.map((item) => ({
   value: item,
   label: item.toUpperCase(),
 }));
+
+export const semesterRegistrationStatus = ["UPCOMING", "ONGOING", "ENDED"];
+export const semesterRegistrationStatusOptions = semesterRegistrationStatus.map(
+  (item) => ({
+    value: item,
+    label: item,
+  })
+);

@@ -18,8 +18,9 @@ import Input from "antd/es/input/Input";
 export default function CreateStudent() {
   const [addStudent] = useAddStudentMutation();
   // * semister data query give to options
-  const { data: semisterData, isLoading: sIsloading } =
-    useGetAllSemesterQuery(undefined);
+  const { data: semisterData, isLoading: sIsloading } = useGetAllSemesterQuery([
+    { name: "sort", value: "year" },
+  ]);
   // * department data query give to options
   const { data: depatrmentData, isLoading: dIsloading } =
     useGetAllAcademicDepartmentQuery(undefined);
