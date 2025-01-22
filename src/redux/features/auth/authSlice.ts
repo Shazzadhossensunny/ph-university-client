@@ -9,7 +9,7 @@ export type TUser = {
 };
 
 export type TAuth = {
-  name: null | object;
+  name: null | TUser;
   token: null | string;
 };
 
