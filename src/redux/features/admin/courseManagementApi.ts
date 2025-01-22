@@ -37,6 +37,7 @@ const courseManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["SemesterRegistration"],
     }),
     academicSemesterRegisteredStatusUpdate: builder.mutation({
       query: ({ id, ...status }) => ({
@@ -77,6 +78,7 @@ const courseManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Course"],
     }),
     assignFaculties: builder.mutation({
       query: ({ courseId, ...data }) => ({

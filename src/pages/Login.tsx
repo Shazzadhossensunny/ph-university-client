@@ -19,7 +19,7 @@ export default function Login() {
 
   const defaultValuse = {
     id: "2028010001",
-    password: "student123",
+    password: "123456",
   };
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
