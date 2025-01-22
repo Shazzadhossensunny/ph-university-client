@@ -154,6 +154,13 @@ const userManagementApi = baseApi.injectEndpoints({
       transformResponse: (response: TResponseRedux<TFaculty>) => response.data,
       invalidatesTags: ["Faculty"],
     }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: `/auth/change-password`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -171,4 +178,5 @@ export const {
   useGetAllFacultyQuery,
   useGetFacultyByIdQuery,
   useUpdateFacultyByIdMutation,
+  useChangePasswordMutation,
 } = userManagementApi;

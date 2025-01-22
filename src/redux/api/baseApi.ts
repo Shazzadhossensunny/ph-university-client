@@ -32,6 +32,10 @@ const baseQueryWithRefreshToken: BaseQueryFn<
     const errorData = result.error.data as { message: string }; // Assert the type
     toast.error(errorData.message);
   }
+  if (result?.error?.status === 403) {
+    const errorData = result.error.data as { message: string }; // Assert the type
+    toast.error(errorData.message);
+  }
   //* Check if the request was unauthorized
   if (result?.error && result?.error?.status === 401) {
     const res = await fetch("http://localhost:5000/api/v1/auth/refresh-token", {

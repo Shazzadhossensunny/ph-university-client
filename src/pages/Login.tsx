@@ -34,11 +34,12 @@ export default function Login() {
       };
 
       const result = await login(userInfo).unwrap();
-
       const user = verifyToken(result.data.accessToken) as TUser;
-
       dispatch(setUser({ user: user, token: result.data.accessToken }));
       toast.success("Logged in", { id: toastId, duration: 2000 });
+      if (result?.data?.needsPasswordChange) {
+        return navigate("/changePassword");
+      }
       navigate(`/${user.role}/dashboard`);
     } catch (err) {
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
