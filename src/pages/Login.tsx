@@ -18,8 +18,8 @@ export default function Login() {
   // });
 
   const defaultValuse = {
-    id: "A-0005",
-    password: "admin12345",
+    id: "2028010001",
+    password: "student123",
   };
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
@@ -51,20 +51,10 @@ export default function Login() {
       <Col span={6}>
         <PHForm onSubmit={onSubmit} defaultValues={defaultValuse}>
           <div>
-            <PHInput
-              type="text"
-              placeholder="type here id"
-              name="id"
-              label="ID"
-            />
+            <PHInput type="text" name="id" label="ID" />
           </div>
           <div>
-            <PHInput
-              type="text"
-              placeholder="type here password"
-              name="password"
-              label="Password"
-            />
+            <PHInput type="text" name="password" label="Password" />
           </div>
 
           <Button htmlType="submit">Submit</Button>

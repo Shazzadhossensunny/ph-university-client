@@ -5,7 +5,7 @@ type TRoute = {
   element: ReactNode;
 };
 type TUserPath = {
-  name: string;
+  name?: string;
   path?: string;
   element?: ReactNode;
   children?: TUserPath[];

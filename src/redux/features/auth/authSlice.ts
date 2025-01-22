@@ -8,7 +8,7 @@ export type TUser = {
   iat: number;
 };
 
-type TAuth = {
+export type TAuth = {
   name: null | object;
   token: null | string;
 };
