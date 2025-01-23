@@ -1,13 +1,20 @@
-import { useGetMyOfferedCourseQuery } from "../../redux/features/student/courseApi";
-import { Card, Collapse, List, Typography, Spin } from "antd";
+import {
+  useEnrollCourseMutation,
+  useGetMyOfferedCourseQuery,
+} from "../../redux/features/student/courseApi";
+import { Card, Col, Row, Button, Typography, Spin, Empty } from "antd";
 import { TGroupedCourse } from "../../types/offeredCourse.type";
+import { toast } from "sonner";
+import { TResponse } from "../../types";
+import { FieldValues } from "react-hook-form";
 
-const { Panel } = Collapse;
 const { Title, Text } = Typography;
 
 export default function OfferedCourse() {
   const { data: offeredCourseData, isLoading } =
     useGetMyOfferedCourseQuery(undefined);
+
+  const [enrollCourse] = useEnrollCourseMutation();
 
   // Handle loading
   if (isLoading) return <Spin tip="Loading courses..." />;
@@ -50,34 +57,62 @@ export default function OfferedCourse() {
       });
     }
   });
-  // console.log(groupedCourse);
+
+  const handleEnroll = async (id: string) => {
+    const enrollCourseData = {
+      offeredCourse: id,
+    };
+    try {
+      const res = (await enrollCourse(
+        enrollCourseData
+      )) as TResponse<FieldValues>;
+      if (res.error) {
+        toast.error(res.error?.data?.message);
+      } else {
+        toast.success("Enroll successfully");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+    toast.dismiss();
+  };
   return (
     <div style={{ padding: "20px" }}>
-      <Title level={2}>Offered Courses</Title>
-      <Collapse accordion>
-        {groupedCourse?.map((course) => (
-          <Panel
-            header={
-              <>
-                <Text strong>
-                  {course.title} ({course.prefix} {course.code})
-                </Text>{" "}
-                - {course.credits} Credits
-              </>
-            }
-            key={course.title}
-          >
-            <List
-              itemLayout="vertical"
-              dataSource={course.sections}
-              renderItem={(section) => (
-                <List.Item key={section._id}>
+      {groupedCourse.length > 0 ? (
+        <Row gutter={[16, 16]}>
+          {groupedCourse.map((course) => (
+            <Col xs={24} sm={24} md={12} lg={8} key={course.title}>
+              <Card
+                title={
+                  <div>
+                    <Title level={5}>{course.title}</Title>
+                    <Text type="secondary">
+                      {course.prefix} {course.code} | Credits: {course.credits}
+                    </Text>
+                  </div>
+                }
+                bordered={true}
+                style={{ borderRadius: "8px", overflow: "hidden" }}
+              >
+                {course.sections.map((section) => (
                   <Card
+                    key={section._id}
+                    type="inner"
                     title={`Section ${section.section}`}
-                    bordered={true}
-                    hoverable
                     style={{ marginBottom: "10px" }}
+                    extra={
+                      <Button
+                        type="primary"
+                        size="small"
+                        onClick={() => handleEnroll(section._id)}
+                      >
+                        Enroll
+                      </Button>
+                    }
                   >
+                    <p>
+                      <strong>Faculty:</strong> {section.faculty}
+                    </p>
                     <p>
                       <strong>Days:</strong> {section.days.join(", ")}
                     </p>
@@ -89,12 +124,33 @@ export default function OfferedCourse() {
                       <strong>Max Capacity:</strong> {section.maxCapacity}
                     </p>
                   </Card>
-                </List.Item>
-              )}
-            />
-          </Panel>
-        ))}
-      </Collapse>
+                ))}
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "50px 20px",
+          }}
+        >
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <div>
+                <Title level={4} style={{ color: "#595959" }}>
+                  No Offered Courses Available
+                </Title>
+                <Text type="secondary">
+                  Please check back later for updates on available courses.
+                </Text>
+              </div>
+            }
+          />
+        </div>
+      )}
     </div>
   );
 }
